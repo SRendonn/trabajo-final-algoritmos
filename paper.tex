@@ -2,7 +2,9 @@
 %
 \usepackage{silence}
 \usepackage{graphicx}
-
+\usepackage{mathtools}
+\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
+\DeclarePairedDelimiter{\floor}{\lfloor}{\rfloor}
 \begin{document}
 %
 \title{Nombre Trabajo Final}
@@ -16,7 +18,7 @@
     Juan Pablo Ortega Medina\orcidID{2222--3333-4444-5555} \and
     Sebastián Rendón Giraldo\orcidID{0000-0001-7822-3173}}
 %
-\authorrunning{J. Sapuyes et al.}
+\authorrunning{}
 % First names are abbreviated in the running head.
 % If there are more than two authors, 'et al.' is used.
 %
@@ -36,19 +38,38 @@
 Las empresas dedicadas a los servicios de laboratorio en casa se encuentran
 periódicamente con el problema de encontrar la ruta más óptima para sus enfermeros,
 que logre minimizar la distancia entre los puntos de recolección de muestras
-$P_{r}$. Los enfermeros suelen comenzar el recorrido desde sus casas $P_o$,
+$P_{r}$. Los enfermeros suelen comenzar el recorrido desde sus casas $P_{o}$,
 a las 4:00 am, hacia los puntos de servicio designados, finalizando en un
-punto de entrega de muestras $P_e$ alrededor de las 10:00am.
+punto de entrega de muestras $P_{e}$ alrededor de las 10:00am.
 
 Para conocer las rutas óptimas para todos los enfermeros, es necesario realizar
 un agrupamiento o clústering geográfico de los puntos de recolección de muestras
-por zonas, utilizando como centroides a los puntos iniciales $P_o$,
-que representan las casas de los enfermeros encargados de tomar la muestra.
-Esto beneficia tanto a las empresas, pues representa un menor consumo de
-combustible y posiblemente un mayor número de servicios por día, como a los
-enfermeros, que tienen que recorrer menores distancias para realizar los servicios
-y tienen una ruta más consistente todos los días.
+por zonas \cite{bard11}, según la cantidad de enfermeros domiciliarios $K$,
+encargados de tomar las muestras. Esto beneficia tanto a las empresas,
+pues representa un menor consumo de combustible y posiblemente un mayor número
+de servicios por día, como a los enfermeros, que tienen que recorrer menores
+distancias para realizar los servicios y tienen una ruta más consistente todos
+los días.
 
+\section{Planteamiento del problema}
+Dado un conjunto de puntos de recolección de muestras $P_{R}$ con coordenadas
+$(x, y)$ y una cantidad de enfermeros domiciliarios $K$ para un día de la semana,
+necesitamos encontrar $K$ clusters de tamaño mínimo $\floor{\frac{R}{K}}$ y tamaño
+máximo $\ceil{\frac{R}{K}}$.
+
+El problema es un subproblema del enrutamiento de flotas, en el cuál debemos encontrar
+los grupos geográficos que minimicen las distancias entre clientes, y asignar cada uno
+de estos grupos a un enfermero. El problema de hallar la ruta óptima dentro de cada
+grupo no se aborda en esta propuesta.
+\subsection{Técnicas propuestas}
+Se han propuesto métodos de clústering geográfico para redes de recolección y entrega
+de paquetes, que buscan minimizar el número de vehículos de la flota que
+la empresa debe usar, utilizando algoritmos jerárquicos aglomerativos con una función
+de distancia que logren minimizar los tiempos (costo) entre clientes de
+un clúster \cite{bard11}.
+\section{Solución}
+\subsection{Algoritmo}
+\section{Complejidad y comparativa}
 %
 % ---- Bibliography ----
 %
