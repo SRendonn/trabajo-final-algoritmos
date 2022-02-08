@@ -1,5 +1,5 @@
 from models.Punto import Punto
-from typing import Any, List, Dict  
+from typing import Any, List, Dict, Tuple
 from models.Domiciliario import Domiciliario
 from models.PuntoEntrega import PuntoEntrega
 from math import ceil
@@ -11,10 +11,12 @@ class AgglomerativeClustering:
         self._domiciliarios : List[Domiciliario] = domiciliarios
         self._puntos_entrega : List[PuntoEntrega] = puntosEntrega
 
-        self._clusters : List[Any] = list(map(lambda x: [x], self._puntos_entrega))
+        self._clusters : List[Any] = self._puntos_entrega[:]
 
         self._clusters_actuales : int = len(self._puntos_entrega)
         self._tamano_maximo : int = ceil(len(self._puntos_entrega) / len(self._domiciliarios))
+
+        self._tupla_puntos_type = Tuple[Punto, Punto]
 
 
 
@@ -25,9 +27,28 @@ class AgglomerativeClustering:
 
 
     def __get_clusters(self) -> None:
+        def get_punto_medio(tupla_puntos: self._tupla_puntos_type) -> Punto:
+            punto_1: Punto = tupla_puntos[0]
+            punto_2: Punto = tupla_puntos[1]
 
-        while(self._clusters > len(self._puntos_entrega)):
-            pass
+            punto_medio: Punto = Punto(
+                (punto_1.get_x() + punto_2.get_x())/2,
+                (punto_1.get_y() + punto_2.get_y())/2,
+                list(tupla_puntos)
+            )
+
+            return punto_medio     
+
+        clusters_pendientes : List[Punto]
+
+        pares_cercanos: Tuple[self._tupla_puntos_type, float] = Punto.pares_cercanos(self._clusters)
+        
+        #while(self._clusters_actuales > len(self._puntos_entrega)):
+        #   pares_cercanos: Tuple[self._tupla_puntos_type, float] = Punto.pares_cercanos(self._clusters)
+
+           
+
+
 
     def __asignar_domiciliarios(self) -> None:
         pass

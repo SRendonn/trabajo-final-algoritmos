@@ -4,6 +4,7 @@ from models.Punto import Punto
 from models.Domiciliario import Domiciliario
 from models.PuntoEntrega import PuntoEntrega
 from services.Generador import Generador
+from services.AgglomerativeClustering import AgglomerativeClustering
 from typing import Any, List, Dict
 
 from matplotlib import pyplot as plt
@@ -61,6 +62,11 @@ def main():
     print(punto[0][1])
     print(punto[1])
     """
+
+    agglomerative_clustering = AgglomerativeClustering(puntos_domiciliario_prueba, puntos_entrega_prueba)
+
+    agglomerative_clustering.run()
+    
 
     for punto in domiciliarios:
         coordenadas = punto.get()
