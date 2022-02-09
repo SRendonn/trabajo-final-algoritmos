@@ -13,10 +13,10 @@
 % If the paper title is too long for the running head, you can set
 % an abbreviated paper title here
 %
-\author{Juan José Sapuyes Pino \and
+\author{Juan José Sapuyes Pino, \and
     Juan Manuel Pajoy López \and
     Juan Pablo Ortega Medina \and
-    Sebastián Rendón Giraldo}
+    Sebastián Rendón Giraldo.}
 %
 \authorrunning{}
 % First names are abbreviated in the running head.
@@ -25,11 +25,14 @@
 \institute{Universidad Nacional de Colombia, Medellín, Colombia.
     \email{\{jsapuyesp,jpajoyl,jportegame,serendongi\}@unal.edu.co}}
 %
-\maketitle              % typeset the header of the contribution
+\maketitle% typeset the header of the contribution
 %
 \begin{abstract}
-    The abstract should briefly summarize the contents of the paper in
-    15--250 words.
+    Este artículo propone un método de agrupamiento jerárquico geográfico para tratar de
+    solucionar una parte del problema del enrutamiento de flotas, en este caso para
+    laboratorios con tomas de muestras a domicilio. El algoritmo es un algoritmo
+    jerárquico aglomerativo, que utiliza una filosofía bottom-up para el agrupamiento
+    y de divide y vencerás para hallar los pares de grupos más cercanos.
     \keywords{Clústering  \and Agrupamiento \and Jerárquico.}
 \end{abstract}
 
@@ -78,22 +81,68 @@ Nazari, et al. \cite{nazari19}, proponen un algoritmo \textit{bottom-up} de clú
 jerárquico con puntos superpuestos con complejidad $O(n^{2})$, agrupando parejas en cada nivel,
 encontrando intersecciones entre clústers y creando un nuevo clúster como la unión de estos dos.
 \section{Método}
-Para la creación de los grupos, se va a utilizar un algoritmo aglomerativo, que implica que se 
-van a calcular los puntos más cercanos de todo el conjunto de puntos, que se irán juntando poco a poco hasta formar grupos más grandes con la cantidad deseada
-. Esta distancia se va a calcular teniendo en cuenta el algoritmo de divide y vencerás para la selección
-de estos puntos, armando parejas muy juntas. Una vez
-se unan los puntos se generará un nuevo punto, que será el centroide de los puntos selecionados para integrarlo
-nuevamente a la lista de puntos y volver a calcular los puntos más cercanos y asi ir generando los puntos uniendo
-cada punto medio. En el caso en el que no se pueda armar un cluster debido a que cuando se unen varios cluster la
-suma de la cantidad de puntos sea mayor a la cantidad máxima de puntos permitida, "aqui va la explicación de lo que está haciendo pablo"
-.El problema exige que cada clúster tenga una cantidad determinada de puntos, por lo que es necesario
-limitar la cantidad de puntos que se pueden agregar a un clúster
-
-Al finalizar la seleción de los clusters, se hará la asignacion de cada uno de los grupos a cada uno de los domiciliarios, que se hace simplemente 
+Para la creación de los grupos, se va a utilizar un algoritmo aglomerativo, que implica que se
+van a calcular los puntos más cercanos de todo el conjunto de puntos, que se irán juntando poco
+a poco hasta formar grupos más grandes con la cantidad deseada. Esta distancia se va a calcular
+teniendo en cuenta el algoritmo de divide y vencerás para la selección de estos puntos, armando
+parejas de puntos lo más juntos posibles. Una vez se unan los puntos, se generará un punto medio,
+que hará parte de la nueva lista de puntos, para así repetir el proceso.
+\\
+Al finalizar la seleción de los clusters, se hará la asignacion de los grupos a cada
+uno de los domiciliarios, que se hace de manera iterativa sobre los domiciliarios disponibles.
+Se comienza encontrando el clúster más cercano para todos los domiciliarios disponibles y en
+caso de desempate, se seleccionará el domiciliario más lejano (para que la varianza de las
+distancias domiciliario-clúster sea lo más baja posible).
 \subsection{Algoritmo}
+El pseudocódigo del algoritmo propueso es el siguiente:
+\begin{verbatim}
+clusters_completos = []
+clusters = puntos_entrega
+clusters_actuales = tamaño de clusters
+mientras clusters_actuales < numero_domiciliarios):
+    # Función para calcular los puntos más cercanos por medio de divide y vencerás
+    pares_cercanos = pares_cercanos(puntos_entrega)
+    clusters = pares_cercanos['puntos_sobrantes'] 
+    punto_medio: pares_cercanos['pares']
+    si tamaño del cluster con centroide en punto_medio >= numero_domiciliarios:
+        agregar a clusters_completos el punto_medio
+    sino:
+        agregar a clusters el punto_medio
+    restar 1 a clusters_actuales
+\end{verbatim}
+La complejidad de este algoritmo es de $O(N^2log^2(N))$, que es peor que el de otros métodos
+de agrupación, sin embargo, es más preciso que otros métodos como K-means \cite{nazari19} y
+creemos que esto compensa su peor eficiencia.
 \section{Resultados}
+El algoritmo es viable para un número de puntos de entrega no mayor a 100, lo
+cual es viable para empresas con alrededor de 10 domiciliarios.
+\\
+\textbf{Nota}: las pruebas fueron realizadas en un MacBook Air M1 a 3,2 GHz.
+\begin{figure}
+    \includegraphics[width=\textwidth]{result_1.png}
+    \caption{Resultados del algoritmo para 100 puntos de entrega y 10 domiciliarios.
+        Tiempo de ejecución: 29,25 ms.}
+\end{figure}
+\begin{figure}
+    \includegraphics[width=\textwidth]{result_2.png}
+    \caption{Resultados del algoritmo para 8 puntos de entrega y 3 domiciliarios.
+        Tiempo de ejecución: 109,20 $\mu$s}
+\end{figure}
+\newpage
 \section{Conclusiones}
-%
+El agrupamiento, en su mayoría genera resultados satisfactorios, sin embargo, es necesario
+una mayor investigación para crear una versión modificada capaz de crear clusters más
+balanceados.
+\\
+El algoritmo propuesto presenta una manera más precisa de agrupamiento que otros
+algoritmos mencionados, y aunque su complejidad en tiempo sea mayor, puede ser útil
+en casos donde se busque un agrupamiento más preciso.
+\\
+En este experimento se realizaron varios intentos de hacer una correcta normalización
+de la cantidad de los datos en los cluster, sin embargo estos no tuvieron éxito debido
+a las diferentes condiciones en las que se presentan algunos puntos y algunos casos extraños
+que requieren mayor investigación.
+% 
 % ---- Bibliography ----
 %
 % BibTeX users should specify bibliography style 'splncs04'.
