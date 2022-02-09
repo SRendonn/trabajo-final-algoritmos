@@ -7,16 +7,16 @@
 \DeclarePairedDelimiter{\floor}{\lfloor}{\rfloor}
 \begin{document}
 %
-\title{Nombre Trabajo Final}
+\title{Agrupamiento jerárquico balanceado para el problema de enrutamiento de flotas}
 %
 %\titlerunning{Abbreviated paper title}
 % If the paper title is too long for the running head, you can set
 % an abbreviated paper title here
 %
-\author{Juan José Sapuyes Pino\orcidID{0000-1111-2222-3333} \and
-    Juan Manuel Pajoy López\orcidID{1111-2222-3333-4444} \and
-    Juan Pablo Ortega Medina\orcidID{2222--3333-4444-5555} \and
-    Sebastián Rendón Giraldo\orcidID{0000-0001-7822-3173}}
+\author{Juan José Sapuyes Pino \and
+    Juan Manuel Pajoy López \and
+    Juan Pablo Ortega Medina \and
+    Sebastián Rendón Giraldo}
 %
 \authorrunning{}
 % First names are abbreviated in the running head.
@@ -30,26 +30,32 @@
 \begin{abstract}
     The abstract should briefly summarize the contents of the paper in
     15--250 words.
-
-    \keywords{Clústering  \and Agrupamiento \and Jerárquico \and Programación Dinámica.}
+    \keywords{Clústering  \and Agrupamiento \and Jerárquico.}
 \end{abstract}
 
 \section{Introducción}
-Las empresas dedicadas a los servicios de laboratorio en casa se encuentran
-periódicamente con el problema de encontrar la ruta más óptima para sus enfermeros,
-que logre minimizar la distancia entre los puntos de recolección de muestras
-$P_{r}$. Los enfermeros suelen comenzar el recorrido desde sus casas $P_{o}$,
-a las 4:00 am, hacia los puntos de servicio designados, finalizando en un
-punto de entrega de muestras $P_{e}$ alrededor de las 10:00am.
+Existen laboratorios que prestan el servicio de toma de muestras en casa,
+un servicio bastante útil para personas que por alguna dificultad no pueden desplazarse
+hasta el lugar donde se toman las muestras, estas muestras se toman y son transportadas
+al laboratorio a bajas temperaturas, para poder preservarlas. Sin embargo, los laboratorios
+que prestan estos servicios se encuentran con un gran problema, ¿cuál es la ruta óptima para
+la persona que toma la muestra? Esto es un problema bastante recurrente para los laboratorios
+y es de vital importancia resolverlo, pues las muestras se encuentran en neveras portátiles,
+las cuales preservan las bajas temperaturas, pero no durante mucho tiempo.  Estos recorridos se
+realizan en horas de la mañana, tomando como punto de partida el hogar del domiciliario $P_{0}$,
+este debe visitar los diferentes lugares designados para la recolección de muestras $P_{r}$ y
+finalizar el recorrido en el laboratorio $P_{e}$.
+\\
+Para determinar las rutas optimas para los domiciliarios, se realiza un proceso de agrupamiento
+o clústering geográfico de los diferentes puntos de recolección $P_{r}$ por zonas \cite{bard11},
+para esto se tiene en cuenta la cantidad de domiciliarios disponibles $K$, los cuales se encargarán
+de tomar las muestras.
+\\
+Este procedimiento no sólo beneficiará a los laboratorios que presten estos servicios representando
+menores costos logísticos y probablemente un mayor número de servicios diarios, sino también a los
+domiciliarios encargados de tomar las muestras, pues tendrán rutas más consistentes diariamente y
+recorrerán menores distancias.
 
-Para conocer las rutas óptimas para todos los enfermeros, es necesario realizar
-un agrupamiento o clústering geográfico de los puntos de recolección de muestras
-por zonas \cite{bard11}, según la cantidad de enfermeros domiciliarios $K$,
-encargados de tomar las muestras. Esto beneficia tanto a las empresas,
-pues representa un menor consumo de combustible y posiblemente un mayor número
-de servicios por día, como a los enfermeros, que tienen que recorrer menores
-distancias para realizar los servicios y tienen una ruta más consistente todos
-los días.
 
 \section{Planteamiento del problema}
 Dado un conjunto de puntos de recolección de muestras $P_{R}$ con coordenadas
@@ -71,9 +77,10 @@ de distancia que logren minimizar los tiempos (costo) entre clientes de un clús
 Nazari, et al. \cite{nazari19}, proponen un algoritmo \textit{bottom-up} de clústering
 jerárquico con puntos superpuestos con complejidad $O(n^{2})$, agrupando parejas en cada nivel,
 encontrando intersecciones entre clústers y creando un nuevo clúster como la unión de estos dos.
-\section{Solución}
+\section{Método}
 \subsection{Algoritmo}
-\section{Complejidad y comparativa}
+\section{Resultados}
+\section{Conclusiones}
 %
 % ---- Bibliography ----
 %
