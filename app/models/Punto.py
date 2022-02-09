@@ -5,12 +5,14 @@ from typing import Tuple, List, Any
 
 class Punto:
 
-    def __init__(self, x: int, y: int, conexiones: List['Punto'] = []) -> None:
+    def __init__(self, x: int, y: int, conexiones: List['Punto'] = [], tamano: int = 1) -> None:
         self._x = x
         self._y = y
         self._conexiones: List['Punto'] = conexiones
         self._bloqueado: bool = False
         self._indice: int = None
+        self._tamano = tamano
+
 
     def get(self) -> Tuple:
         return (self._x, self._y)
@@ -21,8 +23,23 @@ class Punto:
     def get_y(self) -> int:
         return self._y
 
+    def set_tamano(self, tamano: int) -> int:
+        self._tamano = tamano
+
+    def get_tamano(self) -> int:
+        return self._tamano
+
     def set_index(self, index: int) -> None:
         self._indice = index
+    
+    def get_index(self) -> int:
+        return self._indice
+    
+    def set_conexiones(self, conexiones: List['Punto']):
+        self._conexiones = conexiones
+
+    def get_conexiones(self) -> List['Punto']:
+        return self._conexiones
 
     @staticmethod
     def distancia_entre_puntos(p1: 'Punto', p2: 'Punto') -> float:
@@ -30,7 +47,7 @@ class Punto:
         # Se usa la distancia euclidiana, explicar por que
 
     @staticmethod
-    def pares_cercanos(listaPuntos: List['Punto']) -> Tuple[Tuple['Punto', 'Punto'], float]:
+    def pares_cercanos(listaPuntos: List['Punto']) -> Tuple[Tuple['Punto', 'Punto'], List['Punto'], float]:
 
         tupla_puntos_type = Tuple['Punto', 'Punto']
 
@@ -84,7 +101,10 @@ class Punto:
         
         par_cercano = dividir_pares(0, len(listaPuntos) - 1)
         lista_nueva = listaPuntos[:]
-        print(par_cercano[0][0]._indice)
-        print(listaPuntos[par_cercano[0][0]._indice])
-        print(par_cercano[0][0])
-        return par_cercano
+        if(par_cercano[0][0]._indice > par_cercano[0][1]._indice):
+            del lista_nueva[par_cercano[0][0]._indice]
+            del lista_nueva[par_cercano[0][1]._indice]
+        else:
+            del lista_nueva[par_cercano[0][1]._indice]
+            del lista_nueva[par_cercano[0][0]._indice]
+        return (par_cercano[0], lista_nueva, par_cercano[1])

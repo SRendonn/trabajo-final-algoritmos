@@ -1,4 +1,3 @@
-# %%
 from xml import dom
 from models.Punto import Punto
 from models.Domiciliario import Domiciliario
@@ -6,18 +5,25 @@ from models.PuntoEntrega import PuntoEntrega
 from services.Generador import Generador
 from services.AgglomerativeClustering import AgglomerativeClustering
 from typing import Any, List, Dict
+import random
 
 from matplotlib import pyplot as plt
 
 from sys import stdin, stdout
 
+def graficar(punto: Punto, color):
+    for sub_punto in punto.get_conexiones():
+        graficar(sub_punto, color)
+
+    if len(punto.get_conexiones()) == 0:
+        plt.plot(punto.get_x(), punto.get_y(), marker="o", color='black')
+
 
 def main():
 
-    numero_domiciliarios: int = 5
-    numero_puntos_entrega: int = 15
-    generador: Generador = Generador(
-        numero_domiciliarios, numero_puntos_entrega)
+    numero_domiciliarios: int = 3
+    numero_puntos_entrega: int = 8
+    generador: Generador = Generador(numero_domiciliarios, numero_puntos_entrega)
 
     datos: Dict[str, Any] = generador.run()
 
@@ -63,18 +69,33 @@ def main():
     print(punto[1])
     """
 
-    agglomerative_clustering = AgglomerativeClustering(puntos_domiciliario_prueba, puntos_entrega_prueba)
+    agglomerative_clustering = AgglomerativeClustering(domiciliarios, puntos_entrega)
 
-    agglomerative_clustering.run()
+    clusters = agglomerative_clustering.run()
+
+    plt.xlim(0, 11)
+    plt.ylim(0, 11)
+    plt.gca().set_aspect('equal', adjustable='box')
+
+    print(len(clusters))
+
+    for punto in clusters:
+        r = random.random()
+        b = random.random()
+        g = random.random()
+
+        color = (r, g, b)
+
+        graficar(punto,color)
     
 
     for punto in domiciliarios:
         coordenadas = punto.get()
-        plt.plot(coordenadas[0], coordenadas[1], marker="o", color="red")
+        plt.plot(coordenadas[0], coordenadas[1], marker="X", color="black")
 
     for punto in puntos_entrega:
         coordenadas = punto.get()
-        plt.plot(coordenadas[0], coordenadas[1], marker="o", color="black")
+        plt.plot(coordenadas[0], coordenadas[1], marker="*", color="red")
 
     plt.show()
 
@@ -82,4 +103,3 @@ def main():
 if __name__ == "__main__":
     main()
 
-# %%
