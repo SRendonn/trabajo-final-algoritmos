@@ -12,6 +12,7 @@ class Generador:
         self._numero_puntos_entrega = numero_puntos_entrega
         self._domiciliarios : List[Domiciliario] = []
         self._puntos_entrega : List[PuntoEntrega] = []
+        self._escala = 10
 
 
     def run(self) -> Dict[str,Any]:
@@ -21,15 +22,15 @@ class Generador:
     
     def __get_domiciliarios(self) -> None:
         for _ in range(self._numero_domiciliarios):
-            x = random.random()*100
-            y = random.random()*100
+            x = random.random()*self._escala
+            y = random.random()*self._escala
             domiciliario = Domiciliario(x,y)
             self._domiciliarios.append(domiciliario)
 
     def __get_puntos_entrega(self) -> None:
         for _ in range(self._numero_puntos_entrega):
-            x = random.random()*100
-            y = random.random()*100
+            x = random.random()*self._escala
+            y = random.random()*self._escala
             punto_entrega = PuntoEntrega(x,y)
             self._puntos_entrega.append(punto_entrega)
 
