@@ -61,12 +61,16 @@ El problema es un subproblema del enrutamiento de flotas, en el cuál debemos en
 los grupos geográficos que minimicen las distancias entre clientes, y asignar cada uno
 de estos grupos a un enfermero. El problema de hallar la ruta óptima dentro de cada
 grupo no se aborda en esta propuesta.
-\subsection{Técnicas propuestas}
+\subsection{Técnicas propuestas por otros autores}
 Se han propuesto métodos de clústering geográfico para redes de recolección y entrega
 de paquetes, que buscan minimizar el número de vehículos de la flota que
 la empresa debe usar, utilizando algoritmos jerárquicos aglomerativos con una función
-de distancia que logren minimizar los tiempos (costo) entre clientes de
-un clúster \cite{bard11}.
+de distancia que logren minimizar los tiempos (costo) entre clientes de un clúster
+\cite{bard11}.
+\\
+Nazari, et al. \cite{nazari19}, proponen un algoritmo \textit{bottom-up} de clústering
+jerárquico con puntos superpuestos con complejidad $O(n^{2})$, agrupando parejas en cada nivel,
+encontrando intersecciones entre clústers y creando un nuevo clúster como la unión de estos dos.
 \section{Solución}
 \subsection{Algoritmo}
 \section{Complejidad y comparativa}
@@ -76,6 +80,7 @@ un clúster \cite{bard11}.
 % BibTeX users should specify bibliography style 'splncs04'.
 % References will then be sorted and formatted in the correct style.
 %
+\renewcommand{\refname}{Referencias}
 \bibliographystyle{splncs04}
 \bibliography{bibliography}
 \end{document}
