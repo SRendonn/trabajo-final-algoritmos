@@ -3,7 +3,7 @@ from typing import Any, List, Dict, Tuple
 from models.Domiciliario import Domiciliario
 from models.PuntoEntrega import PuntoEntrega
 from math import ceil
-
+import heapq
 
 class AgglomerativeClustering:
 
@@ -12,11 +12,13 @@ class AgglomerativeClustering:
         self._puntos_entrega : List[PuntoEntrega] = puntosEntrega
 
         self._clusters : List[Any] = self._puntos_entrega[:]
+        self._clusters_completos : List[Any] = []
 
         self._clusters_actuales : int = len(self._puntos_entrega)
         self._tamano_maximo : int = ceil(len(self._puntos_entrega) / len(self._domiciliarios))
 
         self._tupla_puntos_type = Tuple[Punto, Punto]
+
 
 
 
@@ -29,82 +31,83 @@ class AgglomerativeClustering:
 
     def __get_clusters(self) -> None:
 
-        
-
-        def encontrar_par(lista: List[Punto]) -> Tuple[self._tupla_puntos_type, List[Punto], float]:
+        def encontrar_par_fuerza_bruta(lista: List[Punto]) -> Tuple[self._tupla_puntos_type, List[Punto], float]:
             pares_cercanos: Tuple[self._tupla_puntos_type, List[Punto], float] = Punto.pares_cercanos(lista)
-            if pares_cercanos[0][0].get_index() == pares_cercanos[0][1].get_index():
-                raise Exception('Mismo punto')
             
-            #print(pares_cercanos[0][0].get_tamano(),pares_cercanos[0][1].get_tamano(), self._tamano_maximo)
-            #print(pares_cercanos[0][0].get(), pares_cercanos[0][1].get())
+            print(pares_cercanos[0][0].get_tamano(),pares_cercanos[0][1].get_tamano(), self._tamano_maximo)
+            print(pares_cercanos[0][0].get(), pares_cercanos[0][1].get())
+
 
             if pares_cercanos[0][0].get_tamano() + pares_cercanos[0][1].get_tamano() > self._tamano_maximo:
                 if(len(pares_cercanos[1]) > 0):
-                    
-                    R: bool = False
-                    L: bool = False
+                    lista_ordenada = Punto.lista_pares_cercanos(lista)
+                    copia_lista_ordenada = lista_ordenada[:]
+                    heapq.heapify(lista_ordenada)
+                    while len(lista_ordenada) > 0:
+                        mas_cercano = heapq.heappop(lista_ordenada)
+                        if mas_cercano[1][0].get_tamano() + mas_cercano[1][1].get_tamano() <= self._tamano_maximo:
+                            pares_cercanos.remove(mas_cercano[1][0])
+                            pares_cercanos.remove(mas_cercano[1][1])
+                            return ((mas_cercano[1][0], mas_cercano[1][1]), pares_cercanos, mas_cercano[0])
+                    punto_medio = get_punto_medio(pares_cercanos[1])
+                    punto_mas_cercano = Punto.get_punto_mas_cercano(punto_medio, pares_cercanos[1])
 
-                    if pares_cercanos[0][0].get_tamano() < self._tamano_maximo:
-                        L = True
-                        lista_L = pares_cercanos[1][:]
-                        lista_L.append(pares_cercanos[0][0])
-                        try:
-                            pares_cercanos_L = encontrar_par(lista_L)
-                        except Exception as e:
-                            print(e)
-                            L = False
-                    
-                    if pares_cercanos[0][1].get_tamano() < self._tamano_maximo:
-                        R = True
-                        lista_R = pares_cercanos[1][:]
-                        lista_R.append(pares_cercanos[0][1])
-                        try:
-                            pares_cercanos_R = encontrar_par(lista_R)
-                        except Exception as e:
-                            print(e)
-                            R = False
-                    
-                    if(L and R):
-                        return min(pares_cercanos_L,pares_cercanos_R, key=lambda x: x[2])
-                    elif L:
-                        return pares_cercanos_L
-                    elif R:
-                        return pares_cercanos_R
-                    else:
-                        raise Exception('Ninguno cumple')
+        
+        def encontrar_par_raro(lista: List[Punto]) -> Tuple[self._tupla_puntos_type, List[Punto], bool]:
+            pares_cercanos: List[self._tupla_puntos_type, List[Punto], float] = list(Punto.pares_cercanos(lista))
+
+            print(pares_cercanos[0][0].get_tamano(),pares_cercanos[0][1].get_tamano(), self._tamano_maximo)
+            print(pares_cercanos[0][0].get(), pares_cercanos[0][1].get())
+
+            if pares_cercanos[0][0].get_tamano() + pares_cercanos[0][1].get_tamano() > self._tamano_maximo:
+                R: bool = False
+                L: bool = False
+                if(pares_cercanos[0][0].get_tamano() <  pares_cercanos[0][1].get_tamano()):
+                    punto_mayor_tamano = pares_cercanos[0][0]
+                    resto = pares_cercanos[0][1].to_list()
+                    L = True
                 else:
-                    raise Exception('Ninguno cumple, busque punto medio')
+                    punto_mayor_tamano = pares_cercanos[0][1]
+                    resto = pares_cercanos[0][0].to_list()
+                    R = True
+                punto_mas_cercano, distancia = Punto.get_punto_mas_cercano(punto_mayor_tamano, resto)
+                print('resto')
+                del resto[punto_mas_cercano.get_index()]
+                print(punto_mas_cercano.get_index())
+                for i in resto:
+                    print(i)
+                print('punto cercano', punto_mas_cercano)
+                if len(resto) > 1:
+                    punto_medio_resto: Punto = Punto.get_punto_medio(list(resto), True)
+                else:
+                    punto_medio_resto: Punto = resto[0]
+                pares_cercanos[1].append(punto_medio_resto)
+                if L:
+                    tupla = (pares_cercanos[0][0],punto_mas_cercano)
+                    pares_cercanos[0] = tupla
+                else:
+                    tupla = (punto_mas_cercano, pares_cercanos[0][1])
+                    pares_cercanos[0] = tupla
+                return (pares_cercanos[0], pares_cercanos[1], False)
+
             else:
-                return pares_cercanos
-
-        def get_punto_medio(puntos: List[Punto], asignar_conexiones: bool = False) -> Punto:
-
-            suma_x: float = 0
-            suma_y: float = 0
-
-            tamano: int = 0
-
-            for punto in puntos:
-                suma_x += punto.get_x()
-                suma_y += punto.get_y()
-                tamano += punto.get_tamano()
-
-            punto_medio: Punto = Punto(suma_x/2, suma_y/2, tamano=tamano)
-
-            if asignar_conexiones:
-                punto_medio.set_conexiones(puntos)
-                
-            return punto_medio
+                return (pares_cercanos[0], pares_cercanos[1], True)
+        
 
         while(self._clusters_actuales > len(self._domiciliarios)):
-            print("------------")
+            print("------------", self._clusters_actuales)
             #print(self._clusters_actuales)
             try:
-                pares_cercanos = encontrar_par(self._clusters)
+                #pares_cercanos = encontrar_par_raro(self._clusters)
+                pares_cercanos: Tuple[self._tupla_puntos_type, List[Punto], float] = Punto.pares_cercanos(self._clusters)
                 self._clusters = pares_cercanos[1]
-                punto_medio: Punto = get_punto_medio(list(pares_cercanos[0]), True)
-                self._clusters.append(punto_medio)
+                punto_medio: Punto = Punto.get_punto_medio(list(pares_cercanos[0]), True)
+                if punto_medio.get_tamano() >= len(self._domiciliarios):
+                    self._clusters_completos.append(punto_medio)
+                else:
+                    self._clusters.append(punto_medio)
+                #self._clusters.append(punto_medio)
+                #if(pares_cercanos[2]):
                 self._clusters_actuales -= 1
             except Exception as e:
                 print(e)
@@ -114,4 +117,4 @@ class AgglomerativeClustering:
         pass
 
     def __response(self) -> List[Punto]:
-        return self._clusters
+        return self._clusters + self._clusters_completos

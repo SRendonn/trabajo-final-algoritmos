@@ -16,7 +16,7 @@ def graficar(punto: Punto, color):
         graficar(sub_punto, color)
 
     if len(punto.get_conexiones()) == 0:
-        plt.plot(punto.get_x(), punto.get_y(), marker="o", color='black')
+        plt.plot(punto.get_x(), punto.get_y(), marker="o", color=color)
 
 
 def main():
@@ -31,6 +31,11 @@ def main():
     puntos_entrega: List[PuntoEntrega] = datos['puntos_entrega']
 
     puntos: List[Punto] = domiciliarios + puntos_entrega
+
+
+    #puntos_x_y = map(lambda x: [x.get()], puntos_entrega)
+
+    #print(list(puntos_x_y))
 
     puntos_domiciliario_prueba = [
         Domiciliario(1, 1),
@@ -77,8 +82,6 @@ def main():
     plt.ylim(0, 11)
     plt.gca().set_aspect('equal', adjustable='box')
 
-    print(len(clusters))
-
     for punto in clusters:
         r = random.random()
         b = random.random()
@@ -90,12 +93,8 @@ def main():
     
 
     for punto in domiciliarios:
-        coordenadas = punto.get()
-        plt.plot(coordenadas[0], coordenadas[1], marker="X", color="black")
-
-    for punto in puntos_entrega:
-        coordenadas = punto.get()
-        plt.plot(coordenadas[0], coordenadas[1], marker="*", color="red")
+       coordenadas = punto.get()
+       plt.plot(coordenadas[0], coordenadas[1], marker="X", color="black")
 
     plt.show()
 
