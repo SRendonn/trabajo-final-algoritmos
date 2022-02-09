@@ -78,6 +78,18 @@ Nazari, et al. \cite{nazari19}, proponen un algoritmo \textit{bottom-up} de clú
 jerárquico con puntos superpuestos con complejidad $O(n^{2})$, agrupando parejas en cada nivel,
 encontrando intersecciones entre clústers y creando un nuevo clúster como la unión de estos dos.
 \section{Método}
+Para la creación de los grupos, se va a utilizar un algoritmo aglomerativo, que implica que se 
+van a calcular los puntos más cercanos de todo el conjunto de puntos, que se irán juntando poco a poco hasta formar grupos más grandes con la cantidad deseada
+. Esta distancia se va a calcular teniendo en cuenta el algoritmo de divide y vencerás para la selección
+de estos puntos, armando parejas muy juntas. Una vez
+se unan los puntos se generará un nuevo punto, que será el centroide de los puntos selecionados para integrarlo
+nuevamente a la lista de puntos y volver a calcular los puntos más cercanos y asi ir generando los puntos uniendo
+cada punto medio. En el caso en el que no se pueda armar un cluster debido a que cuando se unen varios cluster la
+suma de la cantidad de puntos sea mayor a la cantidad máxima de puntos permitida, "aqui va la explicación de lo que está haciendo pablo"
+.El problema exige que cada clúster tenga una cantidad determinada de puntos, por lo que es necesario
+limitar la cantidad de puntos que se pueden agregar a un clúster
+
+Al finalizar la seleción de los clusters, se hará la asignacion de cada uno de los grupos a cada uno de los domiciliarios, que se hace simplemente 
 \subsection{Algoritmo}
 \section{Resultados}
 \section{Conclusiones}
